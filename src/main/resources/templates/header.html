@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- Top Header Area -->
+<div th:fragment="completeHeader(activeTab)">
+    <!-- Top Header Area -->
+    <div class="top-header-area">
+        <div class="container-fluid h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12 col-sm-4">
+                    <!-- Logo Area -->
+                    <div class="logo-area">
+                        <a th:href="@{index.html}"><img th:src="@{/img/core-img/logo.png}" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-8">
+                    <!-- Top Add Area -->
+                    <div class="top-add-area text-right">
+                        <a href="#"><img th:src="@{/img/bg-img/add.png}" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar Area -->
+    <div class="videomag-main-menu" id="sticker">
+        <div class="classy-nav-container breakpoint-off">
+            <div class="container-fluid">
+                <!-- Menu -->
+                <nav class="classy-navbar justify-content-between" id="videomagNav">
+
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    </div>
+
+                    <!-- Menu -->
+                    <div class="classy-menu">
+
+                        <!-- Close Button -->
+                        <div class="classycloseIcon">
+                            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                        </div>
+
+                        <!-- Nav Start -->
+                        <div class="classynav">
+                            <ul>
+                                <li sec:authorize="hasRole('ADMIN')"
+                                    th:classappend="${activeTab == 'Admin' ? 'active' : ''}">
+                                    <a th:href="@{/admin}">Administration</a>
+                                </li>
+                                <li th:classappend="${activeTab == 'Home' ? 'active' : ''}">
+                                    <a th:href="@{/}">Home</a>
+                                </li>
+
+                                <li th:classappend="${activeTab == 'Books' ? 'active' : ''}"><a href="#">Books</a>
+                                    <ul class="dropdown">
+                                        <li><a th:href="@{/books/list}">Book list</a></li>
+                                        <li><a th:href="@{/books/add}">Add book</a></li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="#">Actions</a>
+                                    <ul class="dropdown">
+                                        <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
+                                        <li sec:authorize="isAuthenticated()">
+                                            <a href="javascript: document.logoutForm.submit()"
+                                               role="menuitem">Logout</a>
+
+                                            <form name="logoutForm" th:action="@{/logout}" method="post"
+                                                  th:hidden="true">
+                                                <!--                                                <input hidden type="submit" value="Sign Out"/>-->
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- Nav End -->
+                    </div>
+
+                    <!--<div class="top-search-area" sec:authorize="isAuthenticated()">
+                        <li>
+
+                            <form th:action="@{/logout}" method="POST">
+                                <input type="submit" value="Logout"/>
+                            </form>
+
+                        </li>
+                    </div>-->
+
+                    <!-- Top Search Area -->
+                    <div class="top-search-area">
+                        <form action="#" method="post">
+                            <input type="search" name="top-search" id="topSearch" placeholder="Search">
+                            <button type="submit" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
