@@ -47,6 +47,15 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
@@ -71,6 +80,11 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.paypal.sdk</groupId>
+            <artifactId>rest-api-sdk</artifactId>
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
@@ -110,13 +124,9 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
+                <version>5.2.1</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/eshop_db?allowPublicKeyRetrieval=true&amp;serverTimezone=UTC</url>
-                    <user>java_user</user>
-                    <password>java_user</password>
-                    <schemas>
-                        <schema>eshop_db</schema>
-                    </schemas>
+                    <configFile>src/main/resources/flyway.conf</configFile>
                 </configuration>
             </plugin>
 		</plugins>

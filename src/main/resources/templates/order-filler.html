@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <title>Оформление заказа</title>
+
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <!-- ##### All Javascript Script ##### -->
+    <script th:src="@{/js/plugins/plugins.js}"></script>
+    <!-- Active js -->
+    <script th:src="@{/js/active.js}"></script>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+
+<body>
+
+<div th:replace="~{header :: completeHeader(Cart)}"/>
+
+<div class="container content">
+    <h1>Оформление заказа</h1>
+    <form th:action="@{/shop/order/confirm}" th:object="${order}" method="post" class="form-horizontal">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th>Название товара</th>
+                <th>Количество</th>
+                <th>Стоимость</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="orderItem : ${order.orderItems}">
+                <td th:text="${orderItem.product.title}"/>
+                <td th:text="${orderItem.quantity}"/>
+                <td th:text="${orderItem.totalPrice}"/>
+            </tr>
+            <tr>
+                <td>Итоговая сумма</td>
+                <td/>
+                <td th:text="${order.price}"/>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${!order.confirmed}">
+            <span>Укажите адрес доставки</span>
+            <select class="form-control" th:field="*{deliveryAddress}" id="dropDeliveryAddresses">
+                <option th:each="o : ${deliveryAddresses}" th:value="${o.id}" th:text="${o.address}"></option>
+            </select>
+            <br>
+            <span>Укажите номер телефона</span>
+            <input type="text" th:field="*{phoneNumber}" class="form-control input-sm">
+            <br>
+            <div class="col-sm-6 controls">
+                <button type="submit" class="btn btn-primary">Готово</button>
+                <a class="btn btn-secondary" th:href="@{/shop}">Вернуться в магазин</a>
+            </div>
+        </div>
+        <div th:unless="${!order.confirmed}">
+            <span th:text="'Адрес доставки: ' + ${order.deliveryAddress.address}"/>
+            <br>
+            <span th:text="'Номер телефона: ' + ${order.phoneNumber}"/>
+            <br>
+            <br>
+            <div class="col-sm-6 controls">
+                <!--<a class="btn btn-primary" th:href="@{'/shop/order/result/' + ${order.id}}">Оплатить</a>-->
+                <a class="btn btn-primary" th:href="@{'/paypal/buy'}">Оплатить</a>
+                <a class="btn btn-secondary" th:href="@{/shop}">Вернуться на страницу магазина</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- ##### Footer Area Start ##### -->
+<div th:replace="~{footer :: footer}"></div>
+<!-- ##### Footer Area End ##### -->
+
+</body>
+</html>

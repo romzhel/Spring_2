@@ -7,10 +7,18 @@ import ru.romzhel.eshop.repositories.RoleRepository;
 
 @Service
 public class RoleService {
-    @Autowired
     private RoleRepository roleRepository;
 
-    Role getRoleByRoleName(String roleName) {
-        return roleRepository.findOneByName(roleName);
+    @Autowired
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
+
+    public Role getRoleById(Long id) {
+        return roleRepository.findRoleById(id);
+    }
+
+    public Iterable<Role> getAllRoles() {
+        return roleRepository.findAll();
     }
 }
