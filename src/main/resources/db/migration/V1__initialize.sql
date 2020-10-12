@@ -150,9 +150,6 @@ VALUES
 (1, 2),
 (1, 3);
 
-/*INSERT INTO categories (title)
-VALUES
-("Телевизоры"), ("Ноутбуки");*/
 INSERT INTO `categories` (title, description)
 VALUES
 ('Телевизоры','Разные телевизоры'),
@@ -161,7 +158,7 @@ VALUES
 
 INSERT INTO orders_statuses (title)
 VALUES
-("Сформирован");
+("Сформирован"), ("Отправлен");
 
 INSERT INTO products (category_id, vendor_code, title, short_description, full_description, price)
 VALUES
@@ -179,15 +176,10 @@ VALUES
 (1, "00000012", "64\" Телевизор Samsung UE64NU7170U", "Коротко: Хороший телевизор Samsung 64", "LED телевизор Samsung 64", 12.00);
 
 
-
-/*INSERT INTO products_images (product_id, path)
-VALUES
-(2, "2.jpg");*/
 INSERT INTO `products_images` (product_id, path)
 VALUES
 (2,'2.jpg'),
 (1,'21380ee9-1499-496a-a43e-fd3234632bdctv4.jpg'),
-(15,'1fadc9a9-c6f3-4384-bdf1-86e5a7938da9tv1.jpg'),
 (3,'1988596c-a1e0-45d6-aa34-3b3ce445cc04tv3.jpg'),
 (4,'43a4faa1-6991-4a28-9ff3-fcadcaee26a9tv4.jpg'),
 (5,'34266229-004e-40ce-8b9e-79135fbe4ea3tv5.jpg'),

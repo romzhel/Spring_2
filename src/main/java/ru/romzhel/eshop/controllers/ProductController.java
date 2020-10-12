@@ -1,7 +1,5 @@
 package ru.romzhel.eshop.controllers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +20,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-    private static final Logger logger = LogManager.getLogger(ProductController.class);
     private ProductService productService;
     private CategoryService categoryService;
     private ImageSaverService imageSaverService;
@@ -44,7 +41,6 @@ public class ProductController {
 
     @GetMapping("/edit/{page}/{id}")
     public String edit(Model model, @PathVariable Integer page, @PathVariable(name = "id") Long id) {
-        logger.trace("requested editing item id = {}", id);
         Product product = productService.getProductById(id);
         if (product == null) {
             product = new Product();
@@ -60,14 +56,11 @@ public class ProductController {
     public String processProductAddForm(HttpServletRequest request, HttpServletResponse response,
                                         @RequestParam("page") Integer page, @Valid @ModelAttribute("product") Product product,
                                         BindingResult theBindingResult, Model model, @RequestParam("file") MultipartFile file) {
-        logger.trace("requested new/edited product {}", product);
-
         if (product.getId() == 0 && productService.isProductWithTitleExists(product.getTitle())) {
             theBindingResult.addError(new ObjectError("product.title", "Товар с таким названием уже существует")); // todo не отображает сообщение
         }
 
         if (theBindingResult.hasErrors()) {
-            logger.warn("product edit form error {}", theBindingResult.getAllErrors());
             model.addAttribute("categories", categoryService.getAllCategories());
             return "edit-product";
         }
@@ -80,7 +73,6 @@ public class ProductController {
             product.addImage(productImage);
         }
 
-        logger.trace("saving product {}", product);
         productService.saveProduct(product);
         return "redirect:/shop?page=" + page;
     }
