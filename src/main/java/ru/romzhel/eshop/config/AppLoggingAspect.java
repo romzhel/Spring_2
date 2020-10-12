@@ -1,11 +1,11 @@
 package ru.romzhel.eshop.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 @Aspect
 @Configuration
 public class AppLoggingAspect {
-    private static final Logger logger = LoggerFactory.getLogger(AppLoggingAspect.class);
+    private static final Logger logger = LogManager.getLogger(AppLoggingAspect.class);
 
     @Pointcut("execution(public * ru.romzhel.eshop.controllers.*.*(..))")
     public void callControllerMethod() {
