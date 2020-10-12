@@ -18,6 +18,30 @@
 body {
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
+    min-height: 100vh; /*добавил*/
+    display: flex; /*добавил*/
+    flex-direction: column; /*добавил*/
+}
+
+.menu_bottom_space {
+    margin-bottom: 0;
+}
+
+.product_image {
+    max-height: 40px;
+    max-width: 50px;
+}
+
+.content {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    flex-grow: 1; /*добавил*/
+}
+
+.category_field {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 100%;
 }
 
 h1,
@@ -40,6 +64,7 @@ p {
     font-weight: 500;
 }
 
+/*
 a,
 a:hover,
 a:focus {
@@ -51,7 +76,7 @@ a:focus {
     font-weight: 500;
     font-size: 16px;
     font-family: "Montserrat", sans-serif;
-}
+}*/
 
 ul,
 ol {
@@ -162,6 +187,11 @@ img {
 .section-padding-100 {
     padding-top: 100px;
     padding-bottom: 100px;
+}
+
+.section-padding-50 {
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .section-padding-100-0 {

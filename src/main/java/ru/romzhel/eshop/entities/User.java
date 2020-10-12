@@ -4,11 +4,24 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Data
 @Table(name = "users")
 public class User {
+    public static final Map<String, String> COLUMN_MAPPINGS = new HashMap<>();
+
+    static {
+        COLUMN_MAPPINGS.put("id", "id");
+        COLUMN_MAPPINGS.put("username", "userName");
+        COLUMN_MAPPINGS.put("password", "password");
+        COLUMN_MAPPINGS.put("first_name", "firstName");
+        COLUMN_MAPPINGS.put("last_name", "lastName");
+        COLUMN_MAPPINGS.put("email", "email");
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,11 +42,16 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "delivery_addresses",
+            joinColumns = @JoinColumn(name = "user_id"))
+    private Collection<Role> delivery_addresses;
 
     public User() {
     }

@@ -9,10 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.romzhel.eshop.config.jwt.JwtFilter;
 import ru.romzhel.eshop.services.UserService;
 
 @Configuration
@@ -21,9 +18,6 @@ import ru.romzhel.eshop.services.UserService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserService userService;
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
-    @Autowired
-    private JwtFilter jwtFilter;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -42,26 +36,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //TODO не понятно как совместить авторизацию пользователей на сайте по логину и паролю и авторизацию jwt для rest api
-        //TODO по отдельности работаю корректно
-        http
-                .httpBasic().disable()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/**").hasAnyRole("EMPLOYEE", "MANAGER", "ADMIN")
-                .antMatchers("/auth").permitAll()
-//                .antMatchers("/api/**").permitAll()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
         http.authorizeRequests()
-                //  .antMatchers("/register/**").permitAll()
-//                .antMatchers("/**").hasAnyRole("EMPLOYEE", "MANAGER", "ADMIN")
+                .antMatchers("/register/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .antMatchers("/products/**").hasRole("ADMIN")
+                .antMatchers("/shop/order/**").authenticated()
+                .antMatchers("/profile/**").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -70,8 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutSuccessUrl("/shop")
                 .permitAll();
-
     }
 
     @Bean

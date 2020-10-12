@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <title>Профиль</title>
+
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <!-- ##### All Javascript Script ##### -->
+    <script th:src="@{/js/plugins/plugins.js}"></script>
+    <!-- Active js -->
+    <script th:src="@{/js/active.js}"></script>
+</head>
+
+<body>
+
+<div th:replace="~{header :: completeHeader(Profile)}"/>
+
+<div class="height-400 container content">
+    <h1>Профиль</h1>
+</div>
+
+<!-- ##### Footer Area Start ##### -->
+<div th:replace="~{footer :: footer}"></div>
+<!-- ##### Footer Area End ##### -->
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Категории</title>
+
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <!-- ##### All Javascript Script ##### -->
+    <script th:src="@{/js/plugins/plugins.js}"></script>
+    <!-- Active js -->
+    <script th:src="@{/js/active.js}"></script>
+
+    <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}"/>
+</head>
+
+<body>
+
+<div th:replace="~{header :: completeHeader(AdminDashboard)}"/>
+
+<div class="container content">
+    <h1>Категории</h1>
+    <br>
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="category,iterStat : ${categories}">
+            <td th:text="${iterStat.count}"/>
+            <td th:text="${category.title}"/>
+            <td th:text="${category.description}"/>
+            <td>
+                <a type="button" class="btn btn-primary"
+                   th:href="@{/admin/categories/edit/{categoryId}(categoryId=${category.id})}">Редактировать</a>
+            </td>
+            <td>
+                <a type="button" class="btn btn-danger"
+                   th:href="@{/admin/categories/remove/{categoryId}(categoryId=${category.id})}">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a type="button" class="btn btn-primary" th:href="@{/admin/categories/edit/0}">Добавить</a>
+</div>
+
+<!-- ##### Footer Area Start ##### -->
+<div th:replace="~{footer :: footer}"></div>
+<!-- ##### Footer Area End ##### -->
+
+</body>
+</html>

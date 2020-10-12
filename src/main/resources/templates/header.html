@@ -4,29 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <!-- ##### All Javascript Script ##### -->
+    <script th:src="@{/js/plugins/plugins.js}"></script>
+    <!-- Active js -->
+    <script th:src="@{/js/active.js}"></script>
 </head>
 <body>
 <!-- Top Header Area -->
-<div th:fragment="completeHeader(activeTab)">
-    <!-- Top Header Area -->
-    <div class="top-header-area">
-        <div class="container-fluid h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12 col-sm-4">
-                    <!-- Logo Area -->
-                    <div class="logo-area">
-                        <a th:href="@{index.html}"><img th:src="@{/img/core-img/logo.png}" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-8">
-                    <!-- Top Add Area -->
-                    <div class="top-add-area text-right">
-                        <a href="#"><img th:src="@{/img/bg-img/add.png}" alt=""></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<header class="header-area" th:fragment="completeHeader(activeTab)">
 
     <!-- Navbar Area -->
     <div class="videomag-main-menu" id="sticker">
@@ -37,7 +27,11 @@
 
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">
-                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                        <span class="navbarToggler">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
                     </div>
 
                     <!-- Menu -->
@@ -45,41 +39,49 @@
 
                         <!-- Close Button -->
                         <div class="classycloseIcon">
-                            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                            <div class="cross-wrap">
+                                <span class="top"></span>
+                                <span class="bottom"></span>
+                            </div>
                         </div>
 
                         <!-- Nav Start -->
                         <div class="classynav">
-                            <ul>
-                                <li sec:authorize="hasRole('ADMIN')"
-                                    th:classappend="${activeTab == 'Admin' ? 'active' : ''}">
-                                    <a th:href="@{/admin}">Administration</a>
+                            <ul class="menu_bottom_space">
+                                <li sec:authorize="hasRole('ADMIN')" class="nav-item"
+                                    th:classappend="${activeTab == 'AdminDashboard' ? 'active' : ''}">
+                                    <a class="nav-link" th:href="@{/admin}">Админка</a>
                                 </li>
-                                <li th:classappend="${activeTab == 'Home' ? 'active' : ''}">
-                                    <a th:href="@{/}">Home</a>
+                                <li class="nav-item" th:classappend="${activeTab == 'Shop' ? 'active' : ''}">
+                                    <a class="nav-link" th:href="@{/shop}">Товары<span
+                                            class="sr-only">(current)</span></a>
                                 </li>
-
-                                <li th:classappend="${activeTab == 'Books' ? 'active' : ''}"><a href="#">Books</a>
-                                    <ul class="dropdown">
-                                        <li><a th:href="@{/books/list}">Book list</a></li>
-                                        <li><a th:href="@{/books/add}">Add book</a></li>
-                                    </ul>
+                                <li class="nav-item" th:classappend="${activeTab == 'Cart' ? 'active' : ''}">
+                                    <a class="nav-link" th:href="@{/cart}">Корзина<span class="sr-only">(current)</span></a>
                                 </li>
-
-                                <li>
-                                    <a href="#">Actions</a>
-                                    <ul class="dropdown">
-                                        <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Login</a></li>
-                                        <li sec:authorize="isAuthenticated()">
-                                            <a href="javascript: document.logoutForm.submit()"
-                                               role="menuitem">Logout</a>
-
-                                            <form name="logoutForm" th:action="@{/logout}" method="post"
-                                                  th:hidden="true">
-                                                <!--                                                <input hidden type="submit" value="Sign Out"/>-->
-                                            </form>
-                                        </li>
-                                    </ul>
+                                <li sec:authorize="isAuthenticated()" class="nav-item"
+                                    th:classappend="${activeTab == 'Profile' ? 'active' : ''}">
+                                    <a class="nav-link" th:href="@{/profile}">Профиль</a>
+                                </li>
+                                <!--                                <li sec:authorize="hasRole('ADMIN')" class="nav-item"-->
+                                <!--                                    th:classappend="${activeTab == 'Products' ? 'active' : ''}">-->
+                                <!--                                    <a class="nav-link" th:href="@{/products/edit/0}">Добавить товар</a>-->
+                                <!--                                </li>-->
+                                <li sec:authorize="isAuthenticated()" class="nav-item">
+                                    <form th:action="@{/logout}" method="POST">
+                                        <input type="submit" class="btn btn-danger" value="Logout"/>
+                                    </form>
+                                </li>
+                                <li sec:authorize="isAnonymous()" class="nav-item">
+                                    <form class="align-middle" th:action="@{/authenticateTheUser}" method="POST">
+                                        <div class="input-group-prepend">
+                                            <input class="form-control" type="text" placeholder="Логин" name="username"
+                                                   aria-describedby="inputGroup-sizing-sm">
+                                            <input class="form-control" type="text" placeholder="Пароль" name="password"
+                                                   aria-describedby="inputGroup-sizing-sm">
+                                            <button class="btn btn-secondary btn-sm" type="submit">Войти</button>
+                                        </div>
+                                    </form>
                                 </li>
                             </ul>
                         </div>
@@ -107,6 +109,7 @@
             </div>
         </div>
     </div>
-</div>
+</header>
+
 </body>
 </html>

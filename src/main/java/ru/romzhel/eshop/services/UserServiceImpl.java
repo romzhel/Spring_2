@@ -16,6 +16,7 @@ import ru.romzhel.eshop.repositories.UserRepository;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void save(SystemUser systemUser) {
+    public boolean save(SystemUser systemUser) {
         User user = new User();
         user.setUserName(systemUser.getUserName());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
@@ -58,6 +59,14 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_EMPLOYEE")));
 
         userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean save(User user) {
+        userRepository.save(user);
+        return true;
     }
 
     @Override
@@ -73,5 +82,10 @@ public class UserServiceImpl implements UserService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<User> getAll() {
+        return userRepository.getAllBy();
     }
 }
