@@ -1,3 +1,26 @@
+/*--инициализация отдельной базы для хранения логов---
+DROP SCHEMA IF EXISTS logs_db;
+CREATE SCHEMA logs_db;
+USE logs_db;
+
+DROP TABLE IF EXISTS logs;
+
+CREATE TABLE logs (
+  id MEDIUMINT NOT NULL AUTO_INCREMENT,
+  event_date DATETIME NOT NULL,
+  level VARCHAR(5) NULL,
+  logger VARCHAR(255) NULL,
+  message TEXT NULL,
+  throwable VARCHAR(1000) NULL,
+  PRIMARY KEY (id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+*/
+
+/*---инициализация основной базы---
+CREATE SCHEMA IF NOT EXISTS emarket_db;
+USE emarket_db;
+*/
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS users;
