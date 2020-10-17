@@ -61,4 +61,12 @@ public class ShoppingCart {
     private OrderItem findOrderFromProduct(Product product) {
         return items.stream().filter(o -> o.getProduct().getId().equals(product.getId())).findFirst().orElse(null);
     }
+
+    public int getTotalItemsCount() {
+        int itemsTotal = 0;
+        for (OrderItem orderItem : items) {
+            itemsTotal += orderItem.getQuantity();
+        }
+        return itemsTotal;
+    }
 }

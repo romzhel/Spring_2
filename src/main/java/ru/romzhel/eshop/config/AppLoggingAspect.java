@@ -28,8 +28,8 @@ public class AppLoggingAspect {
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
         logger.trace("==>| {}(), args = {}", methodSignature.getName(), Arrays.toString(proceedingJoinPoint.getArgs()));
         long t0 = System.currentTimeMillis();
-        String result = proceedingJoinPoint.proceed().toString();
-        logger.trace("<==| {}(), template = '{}', params = {}", methodSignature.getName(), result.concat(".html"), proceedingJoinPoint.getArgs());
+        Object result = proceedingJoinPoint.proceed();
+        logger.trace("<==| {}(), template = '{}', params = {}", methodSignature.getName(), result, proceedingJoinPoint.getArgs());
         logger.trace("<=>| {}(), time elapsed: {} msec", methodSignature.getName(), (System.currentTimeMillis() - t0));
         return result;
     }

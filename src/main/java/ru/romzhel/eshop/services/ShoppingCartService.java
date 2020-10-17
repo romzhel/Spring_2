@@ -29,24 +29,26 @@ public class ShoppingCartService {
         session.removeAttribute("cart");
     }
 
-    public void addToCart(HttpSession session, Long productId) {
+    public int addToCart(HttpSession session, Long productId) {
         Product product = productService.getProductById(productId);
-        addToCart(session, product);
+        return addToCart(session, product);
     }
 
-    public void addToCart(HttpSession session, Product product) {
+    public int addToCart(HttpSession session, Product product) {
         ShoppingCart cart = getCurrentCart(session);
         cart.add(product);
+        return cart.getTotalItemsCount();
     }
 
-    public void removeFromCart(HttpSession session, Long productId) {
+    public int removeFromCart(HttpSession session, Long productId) {
         Product product = productService.getProductById(productId);
-        removeFromCart(session, product);
+        return removeFromCart(session, product);
     }
 
-    public void removeFromCart(HttpSession session, Product product) {
+    public int removeFromCart(HttpSession session, Product product) {
         ShoppingCart cart = getCurrentCart(session);
         cart.remove(product);
+        return cart.getTotalItemsCount();
     }
 
     public void setProductCount(HttpSession session, Long productId, Long quantity) {
@@ -62,5 +64,9 @@ public class ShoppingCartService {
 
     public double getTotalCost(HttpSession session) {
         return getCurrentCart(session).getTotalCost();
+    }
+
+    public int getTotalItemsCount(HttpSession httpSession) {
+        return getCurrentCart(httpSession).getTotalItemsCount();
     }
 }
