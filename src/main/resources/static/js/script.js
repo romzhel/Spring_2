@@ -1,8 +1,19 @@
 var stompClient = null;
 
-window.onload = function () {
+jQuery(document).ready(function ($) {
     connect();
-}
+    //клик на строке таблицы с товарами
+    $("tr").on("click", "td[data-href]", function () {
+        // if ($(this).data("href") != null) {
+        window.location.href = $(this).data("href");
+        // }
+    });
+//передача параметров во всплывающие диалоги
+    $(".popup-dialog").on("shown.bs.modal", function (event) {
+        var button = $(event.relatedTarget);
+        $(this).find("form").attr("action", button.data("href"));
+    });
+})
 
 function connect() {
     var socket = new SockJS(webSocket);

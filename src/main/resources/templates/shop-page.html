@@ -44,7 +44,6 @@
     <h1 th:text="Фильтры"></h1>
 
     <form class="form-inline" th:action="@{/shop}" method="get">
-        <input hidden th:value="${page}" th:name="page">
         <select class="form-control form-control-sm mr-sm-1" id="categ" name="categ" type="text"
                 placeholder="Категория">
             <option th:selected="${category == null}">Все категории</option>
@@ -74,19 +73,20 @@
             <th>Цена</th>
             <th></th>
             <th sec:authorize="hasRole('ADMIN')"></th>
+            <th sec:authorize="hasRole('ADMIN')"></th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="product,iterStat : ${products}">
             <!--            <td th:text="${iterStat.index}"/>-->
-            <td th:text="${product.id}"/>
-            <td>
+            <td th:data-href="@{/products/show/{id}(id=${product.id})}" th:text="${product.id}"/>
+            <td th:data-href="@{/products/show/{id}(id=${product.id})}">
                 <img class="product_image" th:if="${product.images.size() > 0}"
                      th:src="@{'/images/' + ${product.images[0].path}}"/>
             </td>
-            <td th:text="${product.title}"/>
-            <td th:text="${product.price}"/>
+            <td th:data-href="@{/products/show/{id}(id=${product.id})}" th:text="${product.title}"/>
+            <td th:data-href="@{/products/show/{id}(id=${product.id})}" th:text="${product.price}"/>
             <td>
                 <button class="btn btn-primary" th:onclick="'javascript:addProductToCart(' + ${product.id} + ')'">В
                     корзину
@@ -95,6 +95,10 @@
             <td sec:authorize="hasRole('ADMIN')">
                 <a type="button" class="btn btn-primary"
                    th:href="@{/products/edit/{page}/{productId}(page=${page}, productId=${product.id})}">Редактировать</a>
+            </td>
+            <td sec:authorize="hasRole('ADMIN')">
+                <a type="button" class="btn btn-danger"
+                   th:href="@{/products/edit/delete/{page}/{productId}(page=${page}, productId=${product.id})}">Удалить</a>
             </td>
         </tr>
         </tbody>
