@@ -13,6 +13,7 @@ import ru.romzhel.eshop.entities.SystemUser;
 import ru.romzhel.eshop.entities.User;
 import ru.romzhel.eshop.repositories.RoleRepository;
 import ru.romzhel.eshop.repositories.UserRepository;
+import ru.romzhel.eshop.validation.PhoneValidator;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +41,9 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Autowired
+    private PhoneValidator phoneValidator;
+
     @Override
     @Transactional
     public User findByUserName(String userName) {
@@ -55,6 +59,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(systemUser.getFirstName());
         user.setLastName(systemUser.getLastName());
         user.setEmail(systemUser.getEmail());
+        user.setPhone(phoneValidator.normalize(systemUser.getPhone()));
 
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_EMPLOYEE")));
 
@@ -66,6 +71,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean save(User user) {
         userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteByUserName(String userName) {
+        userRepository.deleteByUserName(userName);
         return true;
     }
 

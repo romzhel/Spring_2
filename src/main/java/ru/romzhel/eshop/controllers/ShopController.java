@@ -63,12 +63,14 @@ public class ShopController {
     }
 
     @GetMapping
-    public String shopPage(Model model,
+    public String shopPage(Model model, HttpServletRequest request,
                            @RequestParam(value = "page") Optional<Integer> page,
                            @RequestParam(value = "word", required = false) String word,
                            @RequestParam(value = "min", required = false) Double min,
                            @RequestParam(value = "max", required = false) Double max
     ) {
+        request.getSession(); //TODO иначе ошибка при переходе на траницу /shop сразу после запуска проекта
+
         final int currentPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
         Specification<Product> spec = Specification.where(null);

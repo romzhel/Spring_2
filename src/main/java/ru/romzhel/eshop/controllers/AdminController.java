@@ -110,6 +110,12 @@ public class AdminController {
         return "redirect:/admin/users/" + login;
     }
 
+    @GetMapping("/users/{login}/delete")
+    public String removeUser(Model model, @PathVariable String login) {
+        userService.deleteByUserName(login);
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("categories")
     public String categories(Model model) {
         List<Category> categories = categoryService.getAllCategories();

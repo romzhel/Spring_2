@@ -1,7 +1,5 @@
 package ru.romzhel.eshop.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -25,8 +23,6 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
-
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
@@ -41,22 +37,21 @@ public class RegistrationController {
 
     // Binding Result после @ValidModel !!!
     @PostMapping("/processRegistrationForm")
-    public String processRegistrationForm(@Valid @ModelAttribute("systemUser") SystemUser theSystemUser, BindingResult theBindingResult, Model theModel) {
-        String userName = theSystemUser.getUserName();
-        logger.debug("Processing registration form for: " + userName);
+    public String processRegistrationForm(@Valid @ModelAttribute("systemUser") SystemUser theSystemUser,
+                                          BindingResult theBindingResult, Model model) {
         if (theBindingResult.hasErrors()) {
             return "registration-form";
         }
+        String userName = theSystemUser.getUserName();
         User existing = userService.findByUserName(userName);
         if (existing != null) {
             // theSystemUser.setUserName(null);
-            theModel.addAttribute("systemUser", theSystemUser);
-            theModel.addAttribute("registrationError", "User with current username already exists");
-            logger.debug("User name already exists.");
+            model.addAttribute("systemUser", theSystemUser);
+            model.addAttribute("registrationError", "Пользователь с таким именем уже существует");
             return "registration-form";
         }
         userService.save(theSystemUser);
-        logger.debug("Successfully created user: " + userName);
+
         return "registration-confirmation";
     }
 }
