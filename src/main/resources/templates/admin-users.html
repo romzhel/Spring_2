@@ -9,8 +9,10 @@
 
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+
     <!-- ##### All Javascript Script ##### -->
     <script th:src="@{/js/plugins/plugins.js}"></script>
     <!-- Active js -->
@@ -35,6 +37,7 @@
             <th>Фамилия</th>
             <th>Почта</th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
 
@@ -50,11 +53,13 @@
                 <a type="button" class="btn btn-primary"
                    th:href="@{/admin/users/{userName}(userName=${user.userName})}">Редактировать</a>
             </td>
+            <td>
+                <a type="button" class="btn btn-danger"
+                   th:href="@{/admin/users/{userName}/delete(userName=${user.userName})}">Удалить</a>
+            </td>
         </tr>
         </tbody>
     </table>
-
-    <a type="button" class="btn btn-primary" th:href="@{/admin/users/0}">Добавить</a>
 </div>
 
 <!-- ##### Footer Area Start ##### -->
