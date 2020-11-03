@@ -67,39 +67,31 @@
                                     th:classappend="${activeTab == 'Profile' ? 'active' : ''}">
                                     <a class="nav-link" th:href="@{/profile}">Профиль</a>
                                 </li>
-                                <li sec:authorize="isAuthenticated()" class="nav-item">
-                                    <form th:action="@{/logout}" method="POST">
-                                        <input type="submit" class="btn btn-danger" value="Logout"/>
-                                    </form>
-                                </li>
-                                <li sec:authorize="isAnonymous()" th:if="${activeTab != 'Login'}" class="nav-item"
-                                    style="display: inline-flex;">
-                                    <form class="align-middle" th:action="@{/authenticateTheUser}" method="POST">
-                                        <div class="input-group-prepend">
-                                            <input class="form-control mr-sm-1" type="text" placeholder="Логин"
-                                                   name="username"
-                                                   aria-describedby="inputGroup-sizing-sm">
-                                            <input class="form-control mr-sm-1" type="text" placeholder="Пароль"
-                                                   name="password"
-                                                   aria-describedby="inputGroup-sizing-sm">
-                                            <button class="btn btn-secondary mr-sm-1" type="submit">Войти</button>
-                                        </div>
-                                    </form>
-                                    <form class="align-middle input-group-prepend"
-                                          th:action="@{/register/showRegistrationForm}" method="GET">
-                                        <button class="btn btn-secondary" type="submit">Регистрация</button>
-                                    </form>
-                                </li>
                             </ul>
                         </div>
                         <!-- Nav End -->
                     </div>
 
-                    <!-- Top Search Area -->
-                    <div class="top-search-area">
-                        <form action="#" method="post">
-                            <input type="search" name="top-search" id="topSearch" placeholder="Search">
-                            <button type="submit" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    <!-- User Actions Area -->
+                    <div class="form-inline">
+                        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
+                            <input type="submit" class="btn btn-danger" value="Logout"/>
+                        </form>
+
+                        <form sec:authorize="isAnonymous()" th:if="${activeTab != 'Login'}" class="align-middle"
+                              th:action="@{/authenticateTheUser}" method="POST">
+                            <input class="form-control" type="text" placeholder="Логин"
+                                   name="username"
+                                   aria-describedby="inputGroup-sizing-sm">
+                            <input class="form-control" type="text" placeholder="Пароль"
+                                   name="password"
+                                   aria-describedby="inputGroup-sizing-sm">
+                            <button class="btn btn-secondary mr-sm-1" type="submit">Войти</button>
+                        </form>
+                        <form sec:authorize="isAnonymous()" th:if="${activeTab != 'Login'}"
+                              class="align-middle input-group-prepend"
+                              th:action="@{/register/showRegistrationForm}" method="GET">
+                            <button class="btn btn-secondary" type="submit">Регистрация</button>
                         </form>
                     </div>
                 </nav>
