@@ -2,6 +2,7 @@ package ru.romzhel.eshop.repositories.specifications;
 
 
 import org.springframework.data.jpa.domain.Specification;
+import ru.romzhel.eshop.entities.Category;
 import ru.romzhel.eshop.entities.Product;
 
 public class ProductSpecs {
@@ -15,5 +16,9 @@ public class ProductSpecs {
 
     public static Specification<Product> priceLesserThanOrEq(double value) {
         return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), value);
+    }
+
+    public static Specification<Product> categoryEquals(Category category) {
+        return (Specification<Product>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("category"), category);
     }
 }

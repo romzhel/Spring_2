@@ -31,6 +31,7 @@ public class ShopController {
     private ProductService productService;
     private ShoppingCartService shoppingCartService;
     private DeliveryAddressService deliverAddressService;
+    private CategoryService categoryService;
 
     @Autowired
     public void setProductService(ProductService productService) {
@@ -58,6 +59,11 @@ public class ShopController {
     }
 
     @Autowired
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @Autowired
     public void setMailService(MailService mailService) {
         this.mailService = mailService;
     }
@@ -65,6 +71,7 @@ public class ShopController {
     @GetMapping
     public String shopPage(Model model, HttpServletRequest request,
                            @RequestParam(value = "page") Optional<Integer> page,
+                           @RequestParam(value = "categ", required = false) String category,
                            @RequestParam(value = "word", required = false) String word,
                            @RequestParam(value = "min", required = false) Double min,
                            @RequestParam(value = "max", required = false) Double max
@@ -75,6 +82,11 @@ public class ShopController {
 
         Specification<Product> spec = Specification.where(null);
         StringBuilder filters = new StringBuilder();
+
+        if (category != null && !category.equals("Все категории")) {
+            spec = spec.and(ProductSpecs.categoryEquals(categoryService.getCategoryByName(category)));
+            filters.append("&categ=" + category);
+        }
         if (word != null) {
             spec = spec.and(ProductSpecs.titleContains(word));
             filters.append("&word=" + word);
@@ -99,6 +111,10 @@ public class ShopController {
         model.addAttribute("min", min);
         model.addAttribute("max", max);
         model.addAttribute("word", word);
+        model.addAttribute("category", category);
+
+        model.addAttribute("categories", categoryService.getAllCategories());
+
         return "shop-page";
     }
 
