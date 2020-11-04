@@ -57,7 +57,16 @@
                 <td th:text="${itrStat.index + 1}"/>
                 <td th:text="${cartItem.product.title}"/>
                 <td th:text="${cartItem.itemPrice}"/>
-                <td th:text="${cartItem.quantity}"/>
+                <td class="d-flex">
+                    <input class="form-control form-control-sm col-sm-3 quantity-selector mr-1" min="0"
+                           th:value="${cartItem.quantity}" type="number"
+                           th:data-product-id="${cartItem.getProduct().id}"
+                           th:data-url="@{/cart/set}">
+                    <button type="button" class="btn btn-danger btn-sm"
+                            th:data-href="@{/cart/remove/{id}(id=${cartItem.getProduct().id})}"
+                            data-toggle="modal" data-target="#removeProductFromCart">Удалить
+                    </button>
+                </td>
                 <td th:text="${cartItem.totalPrice}"/>
             </tr>
             <tr>
@@ -94,6 +103,36 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Хорошо</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade popup-dialog" id="removeProductFromCart" tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Удаление товара из корзины</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="get">
+                    <div class="input-group">
+                        <div class="form-group category_field">
+                            <label>Действительно желаете выложить товар из корзины?</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Выложить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Отмена
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -37,7 +37,7 @@ public class ShoppingCart {
         if (orderItem == null) {
             return;
         }
-        orderItem.setQuantity(quantity);
+        orderItem.setQuantity(Math.max(0, quantity));
         recalculate();
     }
 
