@@ -51,31 +51,47 @@
                     </h4>
                 </header>
                 <article class="card-body">
-                    <form th:action="@{/admin/users}" th:object="${user}" method="post" enctype="multipart/form-data">
-                        <input th:field="*{id}" type="hidden" class="form-control">
+                    <form th:object="${user}">
 
-                        <div class="form-row form-group">
-                            <label>Логин</label>
-                            <input th:field="*{userName}" type="text" class="form-control" placeholder="">
-                            <small class="error" th:if="${#fields.hasErrors('userName')}"
-                                   th:errors="*{userName}"> </small>
+                        <div class="form-group row">
+                            <label for="userLogin" class="col-sm-4 col-form-label">Логин</label>
+                            <div class="col-sm-8">
+                                <input th:field="*{userName}" type="text" class="form-control" id="userLogin">
+                                <small class="error" th:if="${#fields.hasErrors('userName')}"
+                                       th:errors="*{userName}"> </small>
+                            </div>
                         </div>
-                        <div class="form-row form-group">
-                            <label>Имя</label>
-                            <input th:field="*{firstName}" type="text" class="form-control" placeholder="">
-                            <small class="error" th:if="${#fields.hasErrors('firstName')}"
-                                   th:errors="*{firstName}"> </small>
+                        <div class="form-group row">
+                            <label for="firstName" class="col-sm-4 col-form-label">Имя</label>
+                            <div class="col-sm-8">
+                                <input th:field="*{firstName}" type="text" class="form-control" id="firstName">
+                                <small class="error" th:if="${#fields.hasErrors('firstName')}"
+                                       th:errors="*{firstName}"> </small>
+                            </div>
                         </div>
-                        <div class="form-row form-group">
-                            <label>Фамилия</label>
-                            <input th:field="*{lastName}" type="text" class="form-control" placeholder="">
-                            <small class="error" th:if="${#fields.hasErrors('lastName')}"
-                                   th:errors="*{lastName}"> </small>
+                        <div class="form-group row">
+                            <label for="lastName" class="col-sm-4 col-form-label">Фамилия</label>
+                            <div class="col-sm-8">
+                                <input th:field="*{lastName}" type="text" class="form-control" id="lastName">
+                                <small class="error" th:if="${#fields.hasErrors('lastName')}"
+                                       th:errors="*{lastName}"> </small>
+                            </div>
                         </div>
-                        <div class="form-row form-group">
-                            <label>Электронная почта</label>
-                            <input th:field="*{email}" type="text" class="form-control" placeholder="">
-                            <small class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"> </small>
+                        <div class="form-group row">
+                            <label for="email" class="col-sm-4 col-form-label">Электронная почта</label>
+                            <div class="col-sm-8">
+                                <input th:field="*{email}" type="text" class="form-control" id="email">
+                                <small class="error" th:if="${#fields.hasErrors('email')}"
+                                       th:errors="*{email}"> </small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="phone" class="col-sm-4 col-form-label">Телефон</label>
+                            <div class="col-sm-8">
+                                <input th:field="*{phone}" type="text" class="form-control" id="phone">
+                                <small class="error" th:if="${#fields.hasErrors('email')}"
+                                       th:errors="*{phone}"> </small>
+                            </div>
                         </div>
 
                         <h3>Права</h3>
@@ -85,7 +101,7 @@
                                 <th>ID</th>
                                 <th>Название</th>
                                 <th>
-                                    <button th:if="${newRoles.size()>0}" type="button" class="btn btn-primary"
+                                    <button th:if="${newRoles.size()>0}" type="button" class="btn btn-primary btn-sm"
                                             data-toggle="modal" data-target="#addRole">Добавить
                                     </button>
                                 </th>
@@ -97,7 +113,7 @@
                                 <td th:text="${iterStat.index}"/>
                                 <td th:text="${role.name}"/>
                                 <td>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
                                             data-target="#deleteRole"
                                             th:data-href="@{/admin/users/{login}/deleteRole/{roleId}(login=${user.userName}, roleId=${role.id})}">
                                         Удалить
@@ -137,7 +153,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <div class="modal fade" id="addRole" tabindex="-1" aria-labelledby="exampleModalLabel"
                          aria-hidden="true">

@@ -3,7 +3,7 @@ var stompClient = null;
 jQuery(document).ready(function ($) {
     connect();
     //клик на строке таблицы с товарами
-    $("tr").on("click", "td[data-href]", function () {
+    $("tbody").on("click", "td[data-href]", function () {
         // if ($(this).data("href") != null) {
         window.location.href = $(this).data("href");
         // }
@@ -44,3 +44,4 @@ function addProductToCart(productId) {
         'numericValue': productId
     }));
 }
+

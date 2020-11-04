@@ -18,6 +18,18 @@
     <!-- Active js -->
     <script th:src="@{/js/active.js}"></script>
 
+    <script type="text/javascript" th:src="@{https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js}"></script>
+    <script type="text/javascript"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var webSocket = /*[[@{/feedback-notifications}]]*/ '';
+        var sessionId = /*[[${#session.id}]]*/ '';
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
+
     <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}"/>
 </head>
 
@@ -52,11 +64,11 @@
             <td th:text="${user.phone}"/>
 
             <td>
-                <a type="button" class="btn btn-primary"
+                <a type="button" class="btn btn-primary btn-sm"
                    th:href="@{/admin/users/{userName}(userName=${user.userName})}">Редактировать</a>
             </td>
             <td>
-                <a type="button" class="btn btn-danger"
+                <a type="button" class="btn btn-danger btn-sm"
                    th:href="@{/admin/users/{userName}/delete(userName=${user.userName})}">Удалить</a>
             </td>
         </tr>
