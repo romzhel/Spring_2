@@ -30,4 +30,16 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
 //    @JsonBackReference
     private Order order;
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", itemPrice=" + itemPrice +
+                ", totalPrice=" + totalPrice +
+                ", product=" + product +
+                ", order_id=" + (order == null ? "null" : order.getId()) +
+                '}';
+    }
 }

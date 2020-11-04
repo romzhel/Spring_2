@@ -133,9 +133,27 @@ public class ShopController {
         User user = userService.findByUserName(principal.getName());
         Order order = orderService.makeOrder(shoppingCartService.getCurrentCart(httpServletRequest.getSession()), user);
         List<DeliveryAddress> deliveryAddresses = deliverAddressService.getUserAddresses(user.getId());
+        DeliveryAddress newAddress = new DeliveryAddress();
+        newAddress.setUser(user);
+        newAddress.setId(0L);
         model.addAttribute("order", order);
         model.addAttribute("deliveryAddresses", deliveryAddresses);
+        model.addAttribute("newAddress", newAddress);
         return "order-filler";
+    }
+
+    @PostMapping("/order/addAddress")
+    public String addAddress(@ModelAttribute DeliveryAddress newAddress) {
+        deliverAddressService.addDeliveryAddress(newAddress);
+        return "redirect:/shop/order/fill";
+    }
+
+    @GetMapping("/order/removeAddress/{id}")
+    public String addAddress(@PathVariable Long id) {
+        if (id != null) {
+            deliverAddressService.deleteDeliveryAddress(id);
+        }
+        return "redirect:/shop/order/fill";
     }
 
     @PostMapping("/order/confirm")

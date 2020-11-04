@@ -8,17 +8,29 @@ jQuery(document).ready(function ($) {
         window.location.href = $(this).data("href");
         // }
     });
+    //должен быть выше следующего скрипта
+    $("#removeDeliveryAddress").on("shown.bs.modal", function () {
+        var selected = $("#dropDeliveryAddresses").val()
+        if (selected == null) {
+            $("#removeDeliveryAddress").modal("hide");
+            return;
+        }
+        var link = selected != null ? $("#dropDeliveryAddresses").data("href") + "/" + selected : "#";
+        $("#btnDeleteAddress").attr("data-href", link);
+    });
 //передача параметров во всплывающие диалоги
     $(".popup-dialog").on("shown.bs.modal", function (event) {
         var button = $(event.relatedTarget);
         var action = button.data("href");
         $(this).find("form").attr("action", action);
     });
-    //обработка событий изменений количества товала в корзине
+    //обработка событий изменений количества товаров в корзине
     $("tbody .quantity-selector").change(function () {
         var link = $(this).data("url") + "/" + $(this).data("product-id") + "/" + $(this).val();
         window.location.href = link;
     });
+
+
 })
 
 function connect() {

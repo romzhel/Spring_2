@@ -16,6 +16,18 @@
     <!-- Active js -->
     <script th:src="@{/js/active.js}"></script>
 
+    <script type="text/javascript" th:src="@{https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js}"></script>
+    <script type="text/javascript"
+            th:src="@{https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var webSocket = /*[[@{/feedback-notifications}]]*/ '';
+        var sessionId = /*[[${#session.id}]]*/ '';
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
+
     <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 
@@ -49,16 +61,30 @@
         </table>
 
         <div th:if="${!order.confirmed}">
-            <span>Укажите адрес доставки</span>
-            <select class="form-control" th:field="*{deliveryAddress}" id="dropDeliveryAddresses">
-                <option th:each="o : ${deliveryAddresses}" th:value="${o.id}" th:text="${o.address}"></option>
-            </select>
+            <span>Укажите адрес доставки:</span>
+            <div class="input-group">
+                <select class="custom-select" th:field="*{deliveryAddress}" id="dropDeliveryAddresses"
+                        th:data-href="@{/shop/order/removeAddress}">
+                    <option th:each="o : ${deliveryAddresses}" th:value="${o.id}" th:text="${o.address}"></option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" data-toggle="modal"
+                            data-target="#addDeliveryAddress">Добавить
+                    </button>
+                </div>
+                <div class="input-group-append" th:if="${deliveryAddresses.size() > 0}">
+                    <button class="btn btn-outline-danger" type="button" data-toggle="modal" id="btnDeleteAddress"
+                            data-target="#removeDeliveryAddress">
+                        Удалить
+                    </button>
+                </div>
+            </div>
             <br>
             <span>Укажите номер телефона</span>
             <input type="text" th:field="*{phoneNumber}" class="form-control input-sm">
             <br>
             <div class="col-sm-6 controls">
-                <button type="submit" class="btn btn-primary">Готово</button>
+                <button type="submit" class="btn btn-primary">Отправить</button>
                 <a class="btn btn-secondary" th:href="@{/shop}">Вернуться в магазин</a>
             </div>
         </div>
@@ -75,6 +101,66 @@
             </div>
         </div>
     </form>
+
+    <div class="modal fade popup-dialog" id="addDeliveryAddress" tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Добавление адреса доставки</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/shop/order/addAddress}" th:object="${newAddress}" method="post">
+                        <input type="hidden" th:field="${newAddress.id}">
+                        <input type="hidden" th:field="${newAddress.user}">
+                        <div class="input-group">
+                            <div class="form-group category_field">
+                                <label>Введите новый адрес доставки:</label>
+                                <textarea th:field="*{address}" class="form-control"
+                                          aria-label="With textarea"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Отмена
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade popup-dialog" id="removeDeliveryAddress" tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Удаление адреса доставки</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="get">
+                        <div class="form-group">
+                            <label>Действительно желаете удалить выбранный адрес доставки?</label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- ##### Footer Area Start ##### -->

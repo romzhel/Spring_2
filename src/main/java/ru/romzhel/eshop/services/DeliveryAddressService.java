@@ -19,4 +19,12 @@ public class DeliveryAddressService {
     public List<DeliveryAddress> getUserAddresses(Long userId) {
         return deliveryAddressRepository.findAllByUserId(userId);
     }
+
+    public void addDeliveryAddress(DeliveryAddress address) {
+        deliveryAddressRepository.save(address);
+    }
+
+    public void deleteDeliveryAddress(Long id) {
+        deliveryAddressRepository.deleteById(id);
+    }
 }
