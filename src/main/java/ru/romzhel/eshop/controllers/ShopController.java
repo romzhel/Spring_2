@@ -202,7 +202,7 @@ public class ShopController {
         if (!user.getId().equals(confirmedOrder.getUser().getId())) {
             return "redirect:/";
         }
-//        mailService.sendOrderMail(confirmedOrder);
+        mailService.sendOrderMail(confirmedOrder);
         model.addAttribute("order", confirmedOrder);
         return "order-result";
     }

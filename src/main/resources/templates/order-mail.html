@@ -8,11 +8,12 @@
 <div class="container">
     <br>
     <h1 th:text="${order.getUser().getFirstName() + '!'}"></h1>
-    <p style="margin-bottom: 40px">Ваш заказ успешно оформлен. В ближайшее время мы приступим к его сборке.</p>
+    <p style="margin-bottom: 40px">Ваш заказ успешно сформирован. В ближайшее время мы приступим к его комплектации.</p>
     <table style="border-collapse: collapse;">
         <caption style="font-weight: bold; margin-bottom: 20px">Состав заказа</caption>
         <thead>
         <tr style="background-color: #bee5eb;">
+            <th style="padding: 20px; text-align: center;">№ п/п</th>
             <th style="padding: 20px; text-align: center;">Название товара</th>
             <th style="padding: 20px; text-align: center;">Количество</th>
             <th style="padding: 20px; text-align: center;">Стоимость</th>
@@ -21,6 +22,9 @@
 
         <tbody>
         <tr th:each="orderItem, iterStat : ${order.orderItems}">
+            <td style="border-top: 1px solid #dee2e6; padding: 20px; text-align: center;"
+                th:styleappend="${iterStat.odd} ? 'background-color: rgba(0,0,0,.075);'"
+                th:text="${iterStat.count}"/>
             <td style="border-top: 1px solid #dee2e6; padding: 20px; text-align: center;"
                 th:styleappend="${iterStat.odd} ? 'background-color: rgba(0,0,0,.075);'"
                 th:text="${orderItem.product.title}"/>
