@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <title>Добавить товар</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -29,12 +31,6 @@
     <script type="text/javascript" th:src="@{/js/script.js}"></script>
 
     <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}"/>
-
-    <style>
-        .error {
-            color: red
-        }
-    </style>
 </head>
 
 <body>
@@ -94,8 +90,8 @@
                             </div>
                         </div>
 
-                        <h3>Права</h3>
-                        <table class="table table-hover">
+                        <h3 sec:authorize="hasRole('ADMIN')">Права</h3>
+                        <table sec:authorize="hasRole('ADMIN')" class="table table-hover">
                             <thead class="thead-dark">
                             <tr>
                                 <th>ID</th>
@@ -124,7 +120,7 @@
                         </table>
                     </form>
 
-                    <div class="modal fade popup-dialog" id="deleteRole" tabindex="-1"
+                    <div sec:authorize="hasRole('ADMIN')" class="modal fade popup-dialog" id="deleteRole" tabindex="-1"
                          aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -154,7 +150,8 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="addRole" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    <div sec:authorize="hasRole('ADMIN')" class="modal fade" id="addRole" tabindex="-1"
+                         aria-labelledby="exampleModalLabel"
                          aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">

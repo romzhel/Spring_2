@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8"/>
 
@@ -36,23 +37,23 @@
             <th>Статус заказа</th>
             <th>Дата формирования</th>
             <th>Дата отправки</th>
-            <th>Действия</th>
+            <th sec:authorize="hasRole('ADMIN')">Действия</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="order : ${orders}">
-            <td th:text="${order.id}" th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
-            <td th:text="${order.user.userName}" th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
-            <td th:data-href="@{/admin/orders/info/{id}(id=${order.id})}">
+            <td th:text="${order.id}" th:data-href="@{/orders/info/{id}(id=${order.id})}"/>
+            <td th:text="${order.user.userName}" th:data-href="@{/orders/info/{id}(id=${order.id})}"/>
+            <td th:data-href="@{/orders/info/{id}(id=${order.id})}">
                 <span th:if="${order.status.id == 1}" th:text="${order.status.title}" class="badge badge-danger"/>
                 <span th:if="${order.status.id == 2}" th:text="${order.status.title}" class="badge badge-primary"/>
             </td>
             <td th:text="${#temporals.format(order.createAt, 'dd-MM-yyyy HH:mm')}"
-                th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
-            <td th:text="${order.status.id == 1 ? #temporals.format(order.deliveryDate, 'dd-MM-yyyy HH:mm') :
-                'ожидается ' + #temporals.format(order.deliveryDate, 'dd-MM-yyyy')}"
-                th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
-            <td>
+                th:data-href="@{/orders/info/{id}(id=${order.id})}"></td>
+            <td th:text="${order.status.id == 1 ? 'ожидается ' + #temporals.format(order.deliveryDate, 'dd-MM-yyyy') :
+                #temporals.format(order.deliveryDate, 'dd-MM-yyyy HH:mm')}"
+                th:data-href="@{/orders/info/{id}(id=${order.id})}"></td>
+            <td sec:authorize="hasRole('ADMIN')">
                 <a class="button btn-primary btn-sm mr-1" th:if="${order.status.id == 1}"
                    th:href="@{'/admin/orders/ready/' + ${order.id}}">Отправить заказ</a>
             </td>
