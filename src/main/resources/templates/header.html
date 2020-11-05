@@ -88,8 +88,7 @@
                                    aria-describedby="inputGroup-sizing-sm">
                             <button class="btn btn-secondary mr-sm-1" type="submit">Войти</button>
                         </form>
-                        <form sec:authorize="isAnonymous()" th:if="${activeTab != 'Login'}"
-                              class="align-middle input-group-prepend"
+                        <form sec:authorize="isAnonymous()" class="align-middle input-group-prepend"
                               th:action="@{/register/showRegistrationForm}" method="GET">
                             <button class="btn btn-secondary" type="submit">Регистрация</button>
                         </form>

@@ -16,6 +16,8 @@
     <!-- Active js -->
     <script th:src="@{/js/active.js}"></script>
 
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
+
     <meta name="ctx" th:content="${#httpServletRequest.getContextPath()}"/>
 </head>
 
@@ -33,21 +35,26 @@
             <th>Клиент</th>
             <th>Статус заказа</th>
             <th>Дата формирования</th>
+            <th>Дата отправки</th>
             <th>Действия</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="order : ${orders}">
-            <td th:text="${order.id}"/>
-            <td th:text="${order.user.userName}"/>
-            <td>
+            <td th:text="${order.id}" th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
+            <td th:text="${order.user.userName}" th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
+            <td th:data-href="@{/admin/orders/info/{id}(id=${order.id})}">
                 <span th:if="${order.status.id == 1}" th:text="${order.status.title}" class="badge badge-danger"/>
                 <span th:if="${order.status.id == 2}" th:text="${order.status.title}" class="badge badge-primary"/>
             </td>
-            <td th:text="${order.createAt}"/>
+            <td th:text="${#temporals.format(order.createAt, 'dd-MM-yyyy HH:mm')}"
+                th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
+            <td th:text="${order.status.id == 1 ? #temporals.format(order.deliveryDate, 'dd-MM-yyyy HH:mm') :
+                'ожидается ' + #temporals.format(order.deliveryDate, 'dd-MM-yyyy')}"
+                th:data-href="@{/admin/orders/info/{id}(id=${order.id})}"/>
             <td>
-                <a th:if="${order.status.id == 1}" th:href="@{'/admin/orders/ready/' + ${order.id}}">Отправить заказ</a>
-                <a th:href="@{'/admin/orders/info/' + ${order.id}}">Информация</a>
+                <a class="button btn-primary btn-sm mr-1" th:if="${order.status.id == 1}"
+                   th:href="@{'/admin/orders/ready/' + ${order.id}}">Отправить заказ</a>
             </td>
         </tr>
         </tbody>

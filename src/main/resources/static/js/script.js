@@ -1,7 +1,6 @@
 var stompClient = null;
 
 jQuery(document).ready(function ($) {
-    connect();
     //клик на строке таблицы с товарами
     $("tbody").on("click", "td[data-href]", function () {
         // if ($(this).data("href") != null) {
@@ -30,7 +29,7 @@ jQuery(document).ready(function ($) {
         window.location.href = link;
     });
 
-
+    connect();
 })
 
 function connect() {

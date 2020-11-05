@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.romzhel.eshop.entities.DeliveryAddress;
 import ru.romzhel.eshop.entities.Order;
@@ -14,6 +15,7 @@ import ru.romzhel.eshop.repositories.specifications.ProductSpecs;
 import ru.romzhel.eshop.services.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -157,10 +159,24 @@ public class ShopController {
     }
 
     @PostMapping("/order/confirm")
-    public String orderConfirm(Model model, HttpServletRequest httpServletRequest, @ModelAttribute(name = "order") Order orderFromFrontend, Principal principal) {
+    public String orderConfirm(@Valid @ModelAttribute("order") Order orderFromFrontend, BindingResult theBindingResult,
+                               Principal principal, Model model, HttpServletRequest httpServletRequest) {
         if (principal == null) {
             return "redirect:/login";
         }
+
+        if (theBindingResult.hasErrors()) {
+            orderFromFrontend.setOrderItems(shoppingCartService.getCurrentCart(httpServletRequest.getSession()).getItems());
+            User user = userService.findByUserName(principal.getName());
+            List<DeliveryAddress> deliveryAddresses = deliverAddressService.getUserAddresses(user.getId());
+            DeliveryAddress newAddress = new DeliveryAddress();
+            newAddress.setUser(user);
+            newAddress.setId(0L);
+            model.addAttribute("deliveryAddresses", deliveryAddresses);
+            model.addAttribute("newAddress", newAddress);
+            return "order-filler";
+        }
+
         User user = userService.findByUserName(principal.getName());
         Order order = orderService.makeOrder(shoppingCartService.getCurrentCart(httpServletRequest.getSession()), user);
         order.setDeliveryAddress(orderFromFrontend.getDeliveryAddress());
@@ -169,7 +185,10 @@ public class ShopController {
         order.setDeliveryPrice(0.0);
         order = orderService.saveOrder(order);
         model.addAttribute("order", order);
-        return "order-filler";
+
+        shoppingCartService.resetCart(httpServletRequest.getSession());
+
+        return "redirect:/shop/order/result/" + order.getId();
     }
 
     @GetMapping("/order/result/{id}")
@@ -183,7 +202,7 @@ public class ShopController {
         if (!user.getId().equals(confirmedOrder.getUser().getId())) {
             return "redirect:/";
         }
-        mailService.sendOrderMail(confirmedOrder);
+//        mailService.sendOrderMail(confirmedOrder);
         model.addAttribute("order", confirmedOrder);
         return "order-result";
     }

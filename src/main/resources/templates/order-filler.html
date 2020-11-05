@@ -62,6 +62,7 @@
 
         <div th:if="${!order.confirmed}">
             <span>Укажите адрес доставки:</span>
+            <div class="error" th:if="${#fields.hasErrors('deliveryAddress')}" th:errors="*{deliveryAddress}"/>
             <div class="input-group">
                 <select class="custom-select" th:field="*{deliveryAddress}" id="dropDeliveryAddresses"
                         th:data-href="@{/shop/order/removeAddress}">
@@ -80,9 +81,11 @@
                 </div>
             </div>
             <br>
-            <span>Укажите номер телефона</span>
+            <span>Укажите номер телефона:</span>
+            <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"/>
             <input type="text" th:field="*{phoneNumber}" class="form-control input-sm">
             <br>
+
             <div class="col-sm-6 controls">
                 <button type="submit" class="btn btn-primary">Отправить</button>
                 <a class="btn btn-secondary" th:href="@{/shop}">Вернуться в магазин</a>

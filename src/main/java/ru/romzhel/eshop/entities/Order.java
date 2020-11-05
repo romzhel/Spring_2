@@ -3,8 +3,11 @@ package ru.romzhel.eshop.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.romzhel.eshop.validation.ValidAddress;
+import ru.romzhel.eshop.validation.ValidPhone;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,10 +38,13 @@ public class Order {
     @Column(name = "delivery_price")
     private Double deliveryPrice;
 
+    @ValidAddress(message = "недопустимый адрес")
     @ManyToOne
     @JoinColumn(name = "delivery_address_id")
     private DeliveryAddress deliveryAddress;
 
+    @NotBlank(message = "требуется")
+    @ValidPhone(message = "недопустимый номер")
     @Column(name = "phone_number")
     private String phoneNumber;
 

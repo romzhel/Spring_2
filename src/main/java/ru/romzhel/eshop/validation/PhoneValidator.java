@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 @Component
 public class PhoneValidator implements ConstraintValidator<ValidPhone, String> {
-    private static final String PHONE_PATTERN = "^(\\+?[7-8])?(\\d{10})$";
+    public static final String PHONE_PATTERN = "^(\\+?[7-8])?(\\d{10})$";
     private Pattern pattern;
     private Matcher matcher;
 

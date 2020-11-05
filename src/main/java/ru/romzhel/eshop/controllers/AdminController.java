@@ -15,6 +15,7 @@ import ru.romzhel.eshop.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,13 +62,17 @@ public class AdminController {
     @GetMapping("/orders/ready/{id}")
     public void orderReady(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
         Order order = orderService.findById(id);
+        order.setDeliveryDate(LocalDateTime.now());
         orderService.changeOrderStatus(order, 2L);
         response.sendRedirect(request.getHeader("referer"));
     }
 
     @GetMapping("/orders/info/{id}")//todo реализовать просмотр информации о заказе
-    public void orderInfo(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
-        response.sendRedirect(request.getHeader("referer"));
+    public String orderInfo(Model model, @PathVariable("id") Long id) throws Exception {
+        Order confirmedOrder = orderService.findById(id);
+        model.addAttribute("order", confirmedOrder);
+        return "order-result";
+        //        response.sendRedirect(request.getHeader("referer"));
     }
 
     @GetMapping("/users")

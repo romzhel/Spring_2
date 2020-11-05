@@ -23,6 +23,10 @@ body {
     flex-direction: column; /*добавил*/
 }
 
+.error {
+    color: red
+}
+
 .menu_bottom_space {
     margin-bottom: 0;
 }
