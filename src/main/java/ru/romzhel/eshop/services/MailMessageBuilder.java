@@ -20,4 +20,10 @@ public class MailMessageBuilder {
         context.setVariable("order", order);
         return templateEngine.process("order-mail", context);
     }
+
+    public String buildOrderDeliveryEmail(Order order) {
+        Context context = new Context();
+        context.setVariable("order", order);
+        return templateEngine.process("order-mail-delivery", context);
+    }
 }

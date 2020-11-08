@@ -8,7 +8,7 @@
 <div class="container">
     <br>
     <h1 th:text="${order.getUser().getFirstName() + '!'}"></h1>
-    <p style="margin-bottom: 40px">Ваш заказ успешно сформирован. В ближайшее время мы приступим к его комплектации.</p>
+    <p style="margin-bottom: 40px">Ваш заказ успешно скомплектован и передан в службу доставки.</p>
     <table style="border-collapse: collapse;">
         <caption style="font-weight: bold; margin-bottom: 20px">Состав заказа</caption>
         <thead>
@@ -36,6 +36,7 @@
                 th:text="${orderItem.totalPrice}"/>
         </tr>
         </tbody>
+
         <tfoot>
         <td style="padding: 20px; font-style: italic;">Итоговая сумма:</td>
         <td style="padding: 20px; font-style: italic;"></td>

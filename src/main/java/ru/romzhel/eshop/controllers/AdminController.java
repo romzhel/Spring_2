@@ -8,10 +8,7 @@ import ru.romzhel.eshop.entities.Category;
 import ru.romzhel.eshop.entities.Order;
 import ru.romzhel.eshop.entities.Role;
 import ru.romzhel.eshop.entities.User;
-import ru.romzhel.eshop.services.CategoryService;
-import ru.romzhel.eshop.services.OrderService;
-import ru.romzhel.eshop.services.RoleService;
-import ru.romzhel.eshop.services.UserService;
+import ru.romzhel.eshop.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +23,7 @@ public class AdminController {
     private UserService userService;
     private RoleService roleService;
     private CategoryService categoryService;
+    private MailService mailService;
 
     @Autowired
     public void setOrderService(OrderService orderService) {
@@ -47,6 +45,11 @@ public class AdminController {
         this.categoryService = categoryService;
     }
 
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+
     @GetMapping
     public String showAdminDashboard() {
         return "admin-panel";
@@ -64,6 +67,7 @@ public class AdminController {
         Order order = orderService.findById(id);
         order.setDeliveryDate(LocalDateTime.now());
         orderService.changeOrderStatus(order, 2L);
+        mailService.sendOrderDeliveryMail(order);
         response.sendRedirect(request.getHeader("referer"));
     }
 
