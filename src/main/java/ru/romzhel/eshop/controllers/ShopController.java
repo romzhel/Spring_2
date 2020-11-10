@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.romzhel.eshop.entities.DeliveryAddress;
 import ru.romzhel.eshop.entities.Order;
@@ -14,6 +15,7 @@ import ru.romzhel.eshop.repositories.specifications.ProductSpecs;
 import ru.romzhel.eshop.services.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +33,7 @@ public class ShopController {
     private ProductService productService;
     private ShoppingCartService shoppingCartService;
     private DeliveryAddressService deliverAddressService;
+    private CategoryService categoryService;
 
     @Autowired
     public void setProductService(ProductService productService) {
@@ -58,21 +61,34 @@ public class ShopController {
     }
 
     @Autowired
+    public void setCategoryService(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @Autowired
     public void setMailService(MailService mailService) {
         this.mailService = mailService;
     }
 
     @GetMapping
-    public String shopPage(Model model,
+    public String shopPage(Model model, HttpServletRequest request,
                            @RequestParam(value = "page") Optional<Integer> page,
+                           @RequestParam(value = "categ", required = false) String category,
                            @RequestParam(value = "word", required = false) String word,
                            @RequestParam(value = "min", required = false) Double min,
                            @RequestParam(value = "max", required = false) Double max
     ) {
+        request.getSession(); //TODO иначе ошибка при переходе на траницу /shop сразу после запуска проекта
+
         final int currentPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
         Specification<Product> spec = Specification.where(null);
         StringBuilder filters = new StringBuilder();
+
+        if (category != null && !category.equals("Все категории")) {
+            spec = spec.and(ProductSpecs.categoryEquals(categoryService.getCategoryByName(category)));
+            filters.append("&categ=" + category);
+        }
         if (word != null) {
             spec = spec.and(ProductSpecs.titleContains(word));
             filters.append("&word=" + word);
@@ -97,6 +113,10 @@ public class ShopController {
         model.addAttribute("min", min);
         model.addAttribute("max", max);
         model.addAttribute("word", word);
+        model.addAttribute("category", category);
+
+        model.addAttribute("categories", categoryService.getAllCategories());
+
         return "shop-page";
     }
 
@@ -115,16 +135,48 @@ public class ShopController {
         User user = userService.findByUserName(principal.getName());
         Order order = orderService.makeOrder(shoppingCartService.getCurrentCart(httpServletRequest.getSession()), user);
         List<DeliveryAddress> deliveryAddresses = deliverAddressService.getUserAddresses(user.getId());
+        DeliveryAddress newAddress = new DeliveryAddress();
+        newAddress.setUser(user);
+        newAddress.setId(0L);
         model.addAttribute("order", order);
         model.addAttribute("deliveryAddresses", deliveryAddresses);
+        model.addAttribute("newAddress", newAddress);
         return "order-filler";
     }
 
+    @PostMapping("/order/addAddress")
+    public String addAddress(@ModelAttribute DeliveryAddress newAddress) {
+        deliverAddressService.addDeliveryAddress(newAddress);
+        return "redirect:/shop/order/fill";
+    }
+
+    @GetMapping("/order/removeAddress/{id}")
+    public String addAddress(@PathVariable Long id) {
+        if (id != null) {
+            deliverAddressService.deleteDeliveryAddress(id);
+        }
+        return "redirect:/shop/order/fill";
+    }
+
     @PostMapping("/order/confirm")
-    public String orderConfirm(Model model, HttpServletRequest httpServletRequest, @ModelAttribute(name = "order") Order orderFromFrontend, Principal principal) {
+    public String orderConfirm(@Valid @ModelAttribute("order") Order orderFromFrontend, BindingResult theBindingResult,
+                               Principal principal, Model model, HttpServletRequest httpServletRequest) {
         if (principal == null) {
             return "redirect:/login";
         }
+
+        if (theBindingResult.hasErrors()) {
+            orderFromFrontend.setOrderItems(shoppingCartService.getCurrentCart(httpServletRequest.getSession()).getItems());
+            User user = userService.findByUserName(principal.getName());
+            List<DeliveryAddress> deliveryAddresses = deliverAddressService.getUserAddresses(user.getId());
+            DeliveryAddress newAddress = new DeliveryAddress();
+            newAddress.setUser(user);
+            newAddress.setId(0L);
+            model.addAttribute("deliveryAddresses", deliveryAddresses);
+            model.addAttribute("newAddress", newAddress);
+            return "order-filler";
+        }
+
         User user = userService.findByUserName(principal.getName());
         Order order = orderService.makeOrder(shoppingCartService.getCurrentCart(httpServletRequest.getSession()), user);
         order.setDeliveryAddress(orderFromFrontend.getDeliveryAddress());
@@ -133,7 +185,10 @@ public class ShopController {
         order.setDeliveryPrice(0.0);
         order = orderService.saveOrder(order);
         model.addAttribute("order", order);
-        return "order-filler";
+
+        shoppingCartService.resetCart(httpServletRequest.getSession());
+
+        return "redirect:/shop/order/result/" + order.getId();
     }
 
     @GetMapping("/order/result/{id}")

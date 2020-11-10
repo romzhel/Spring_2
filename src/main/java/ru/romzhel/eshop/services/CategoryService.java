@@ -38,4 +38,8 @@ public class CategoryService {
         categoryRepository.delete(category);
         return true;
     }
+
+    public Category getCategoryByName(String name) {
+        return categoryRepository.getByTitle(name);
+    }
 }

@@ -34,14 +34,10 @@
 
 <body>
 
-<div th:replace="~{header :: completeHeader(Profile)}"/>
+<div th:replace="~{header :: completeHeader(Error)}"/>
 
 <div class="height-400 container content">
-    <h1>Профиль</h1>
-    <br>
-    <a th:href="@{/profile/account}">Личные данные</a>
-    <br>
-    <a th:href="@{/profile/orders}">Заказы</a>
+    <h3>Данная операция не может быть выполнена</h3>
 </div>
 
 <!-- ##### Footer Area Start ##### -->

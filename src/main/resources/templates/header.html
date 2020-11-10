@@ -7,8 +7,10 @@
 
     <link rel="stylesheet" th:href="@{/style.css}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+
     <!-- ##### All Javascript Script ##### -->
     <script th:src="@{/js/plugins/plugins.js}"></script>
     <!-- Active js -->
@@ -65,46 +67,30 @@
                                     th:classappend="${activeTab == 'Profile' ? 'active' : ''}">
                                     <a class="nav-link" th:href="@{/profile}">Профиль</a>
                                 </li>
-                                <!--                                <li sec:authorize="hasRole('ADMIN')" class="nav-item"-->
-                                <!--                                    th:classappend="${activeTab == 'Products' ? 'active' : ''}">-->
-                                <!--                                    <a class="nav-link" th:href="@{/products/edit/0}">Добавить товар</a>-->
-                                <!--                                </li>-->
-                                <li sec:authorize="isAuthenticated()" class="nav-item">
-                                    <form th:action="@{/logout}" method="POST">
-                                        <input type="submit" class="btn btn-danger" value="Logout"/>
-                                    </form>
-                                </li>
-                                <li sec:authorize="isAnonymous()" class="nav-item">
-                                    <form class="align-middle" th:action="@{/authenticateTheUser}" method="POST">
-                                        <div class="input-group-prepend">
-                                            <input class="form-control" type="text" placeholder="Логин" name="username"
-                                                   aria-describedby="inputGroup-sizing-sm">
-                                            <input class="form-control" type="text" placeholder="Пароль" name="password"
-                                                   aria-describedby="inputGroup-sizing-sm">
-                                            <button class="btn btn-secondary btn-sm" type="submit">Войти</button>
-                                        </div>
-                                    </form>
-                                </li>
                             </ul>
                         </div>
                         <!-- Nav End -->
                     </div>
 
-                    <!--<div class="top-search-area" sec:authorize="isAuthenticated()">
-                        <li>
+                    <!-- User Actions Area -->
+                    <div class="form-inline">
+                        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="POST">
+                            <input type="submit" class="btn btn-danger" value="Выйти"/>
+                        </form>
 
-                            <form th:action="@{/logout}" method="POST">
-                                <input type="submit" value="Logout"/>
-                            </form>
-
-                        </li>
-                    </div>-->
-
-                    <!-- Top Search Area -->
-                    <div class="top-search-area">
-                        <form action="#" method="post">
-                            <input type="search" name="top-search" id="topSearch" placeholder="Search">
-                            <button type="submit" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        <form sec:authorize="isAnonymous()" th:if="${activeTab != 'Login'}" class="align-middle"
+                              th:action="@{/authenticateTheUser}" method="POST">
+                            <input class="form-control" type="text" placeholder="Логин"
+                                   name="username"
+                                   aria-describedby="inputGroup-sizing-sm">
+                            <input class="form-control" type="text" placeholder="Пароль"
+                                   name="password"
+                                   aria-describedby="inputGroup-sizing-sm">
+                            <button class="btn btn-secondary mr-sm-1" type="submit">Войти</button>
+                        </form>
+                        <form sec:authorize="isAnonymous()" class="align-middle input-group-prepend"
+                              th:action="@{/register/showRegistrationForm}" method="GET">
+                            <button class="btn btn-secondary" type="submit">Регистрация</button>
                         </form>
                     </div>
                 </nav>

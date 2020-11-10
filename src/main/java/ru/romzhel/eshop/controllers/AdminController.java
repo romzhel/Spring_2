@@ -8,13 +8,11 @@ import ru.romzhel.eshop.entities.Category;
 import ru.romzhel.eshop.entities.Order;
 import ru.romzhel.eshop.entities.Role;
 import ru.romzhel.eshop.entities.User;
-import ru.romzhel.eshop.services.CategoryService;
-import ru.romzhel.eshop.services.OrderService;
-import ru.romzhel.eshop.services.RoleService;
-import ru.romzhel.eshop.services.UserService;
+import ru.romzhel.eshop.services.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +23,7 @@ public class AdminController {
     private UserService userService;
     private RoleService roleService;
     private CategoryService categoryService;
+    private MailService mailService;
 
     @Autowired
     public void setOrderService(OrderService orderService) {
@@ -46,6 +45,11 @@ public class AdminController {
         this.categoryService = categoryService;
     }
 
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+
     @GetMapping
     public String showAdminDashboard() {
         return "admin-panel";
@@ -61,14 +65,19 @@ public class AdminController {
     @GetMapping("/orders/ready/{id}")
     public void orderReady(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
         Order order = orderService.findById(id);
+        order.setDeliveryDate(LocalDateTime.now());
         orderService.changeOrderStatus(order, 2L);
+        mailService.sendOrderDeliveryMail(order);
         response.sendRedirect(request.getHeader("referer"));
     }
 
-    @GetMapping("/orders/info/{id}")//todo реализовать просмотр информации о заказе
-    public void orderInfo(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
-        response.sendRedirect(request.getHeader("referer"));
-    }
+    /*@GetMapping("/orders/info/{id}")
+    public String orderInfo(Model model, @PathVariable("id") Long id) throws Exception {
+        Order confirmedOrder = orderService.findById(id);
+        model.addAttribute("order", confirmedOrder);
+        return "order-result";
+        //        response.sendRedirect(request.getHeader("referer"));
+    }*/
 
     @GetMapping("/users")
     public String usersInfo(Model model) throws Exception {
@@ -108,6 +117,12 @@ public class AdminController {
         userService.save(user);
         model.addAttribute("user", user);
         return "redirect:/admin/users/" + login;
+    }
+
+    @GetMapping("/users/{login}/delete")
+    public String removeUser(Model model, @PathVariable String login) {
+        userService.deleteByUserName(login);
+        return "redirect:/admin/users";
     }
 
     @GetMapping("categories")

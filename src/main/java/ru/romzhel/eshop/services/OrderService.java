@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 public class OrderService {
     private OrderRepository orderRepository;
-
     private OrderStatusService orderStatusService;
 
     @Autowired
@@ -59,5 +58,9 @@ public class OrderService {
     public Order changeOrderStatus(Order order, Long statusId) {
         order.setStatus(orderStatusService.getStatusById(statusId));
         return saveOrder(order);
+    }
+
+    public List<Order> getOrdersByUser(User user) {
+        return orderRepository.getAllByUser(user);
     }
 }

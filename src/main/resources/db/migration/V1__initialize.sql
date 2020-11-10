@@ -56,7 +56,7 @@ CREATE TABLE users_roles (
 
   CONSTRAINT FK_USER_ID_01 FOREIGN KEY (user_id)
   REFERENCES users (id)
-  ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ON DELETE CASCADE ON UPDATE NO ACTION,
 
   CONSTRAINT FK_ROLE_ID FOREIGN KEY (role_id)
   REFERENCES roles (id)
@@ -181,7 +181,7 @@ VALUES
 
 INSERT INTO orders_statuses (title)
 VALUES
-("Сформирован"), ("Отправлен");
+("Комплектуется"), ("Отправлен");
 
 INSERT INTO products (category_id, vendor_code, title, short_description, full_description, price)
 VALUES

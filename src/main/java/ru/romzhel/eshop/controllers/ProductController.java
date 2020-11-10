@@ -39,6 +39,20 @@ public class ProductController {
         this.imageSaverService = imageSaverService;
     }
 
+    @GetMapping("/show/{id}")
+    public String show(Model model, @PathVariable Long id) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "product-page";
+    }
+
+    @GetMapping("/edit/delete/{page}/{id}")
+    public String delete(Model model, @PathVariable Integer page, @PathVariable(name = "id") Long id) {
+        productService.deleteProductById(id);
+        model.addAttribute("page", page);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "redirect:/shop?page=" + page;
+    }
+
     @GetMapping("/edit/{page}/{id}")
     public String edit(Model model, @PathVariable Integer page, @PathVariable(name = "id") Long id) {
         Product product = productService.getProductById(id);
@@ -62,6 +76,7 @@ public class ProductController {
 
         if (theBindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("page", page);
             return "edit-product";
         }
 

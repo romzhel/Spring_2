@@ -1,8 +1,36 @@
 var stompClient = null;
 
-window.onload = function () {
+jQuery(document).ready(function ($) {
+    //клик на строке таблицы с товарами
+    $("tbody").on("click", "td[data-href]", function () {
+        // if ($(this).data("href") != null) {
+        window.location.href = $(this).data("href");
+        // }
+    });
+    //должен быть выше следующего скрипта
+    $("#removeDeliveryAddress").on("shown.bs.modal", function () {
+        var selected = $("#dropDeliveryAddresses").val()
+        if (selected == null) {
+            $("#removeDeliveryAddress").modal("hide");
+            return;
+        }
+        var link = selected != null ? $("#dropDeliveryAddresses").data("href") + "/" + selected : "#";
+        $("#btnDeleteAddress").attr("data-href", link);
+    });
+//передача параметров во всплывающие диалоги
+    $(".popup-dialog").on("shown.bs.modal", function (event) {
+        var button = $(event.relatedTarget);
+        var action = button.data("href");
+        $(this).find("form").attr("action", action);
+    });
+    //обработка событий изменений количества товаров в корзине
+    $("tbody .quantity-selector").change(function () {
+        var link = $(this).data("url") + "/" + $(this).data("product-id") + "/" + $(this).val();
+        window.location.href = link;
+    });
+
     connect();
-}
+})
 
 function connect() {
     var socket = new SockJS(webSocket);
@@ -33,3 +61,4 @@ function addProductToCart(productId) {
         'numericValue': productId
     }));
 }
+
